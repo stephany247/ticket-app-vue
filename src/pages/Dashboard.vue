@@ -42,13 +42,13 @@
       <div class="flex flex-col sm:flex-row gap-3 justify-center">
         <button
           @click="goToTickets"
-          class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition"
+          class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition duration-200 ease-in-out cursor-pointer"
         >
           Manage Tickets
         </button>
         <button
           @click="handleLogout"
-          class="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-md transition"
+          class="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-md transition duration-200 ease-in-out cursor-pointer"
         >
           Logout
         </button>

@@ -24,7 +24,7 @@
         <template v-if="user">
           <button
             @click="handleLogout"
-            class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm"
+            class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md font-medium transition duration-300 ease-in-out cursor-pointer"
           >
             Logout
           </button>
@@ -32,13 +32,13 @@
         <template v-else>
           <RouterLink
             to="/auth/login"
-            class="text-blue-600 border border-blue-600 px-3 py-1 rounded-md hover:bg-blue-600 hover:text-white transition"
+            class="text-blue-600 border border-blue-600 px-4 py-2 rounded-md hover:bg-blue-600 hover:text-white transition"
           >
             Login
           </RouterLink>
           <RouterLink
             to="/auth/register"
-            class="bg-blue-600 text-white px-3 py-1 rounded-md hover:bg-blue-700 transition"
+            class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
           >
             Register
           </RouterLink>

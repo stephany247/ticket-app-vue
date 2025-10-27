@@ -5,7 +5,7 @@
     >
       <div class="mb-3 md:mb-0">
         <span class="font-semibold text-gray-800">TicketPro</span>
-        — built with accessibility in mind.
+        — Manage issues, faster.
       </div>
 
       <div class="flex gap-4">

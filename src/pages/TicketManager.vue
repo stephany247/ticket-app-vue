@@ -12,16 +12,18 @@
         <form @submit.prevent="handleSubmit" class="space-y-3">
           <!-- Title -->
           <div class="flex flex-col">
-            <label for="title" class="text-sm font-medium text-gray-700"
-              >Title</label
-            >
+            <label for="title" class="text-sm font-medium text-gray-700">Title <span class="text-red-500">*</span></label>
             <input
               id="title"
               v-model="form.title"
               type="text"
               placeholder="Enter ticket title"
-              class="mt-1 px-3 py-2 border border-blue-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="mt-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              :class="errors.title ? 'border-red-500' : 'border-blue-600'"
             />
+            <p v-if="errors.title" class="text-red-500 text-xs mt-1">
+              {{ errors.title }}
+            </p>
           </div>
 
           <!-- Description -->
@@ -32,10 +34,14 @@
             <textarea
               id="description"
               v-model="form.description"
-              placeholder="Describe the issue..."
+              placeholder="Describe the issue(Optional)"
               rows="4"
-              class="mt-1 px-3 py-2 border border-blue-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+              class="mt-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+              :class="errors.description ? 'border-red-500' : 'border-blue-600'"
             ></textarea>
+            <p v-if="errors.description" class="text-red-500 text-xs mt-1">
+              {{ errors.description }}
+            </p>
           </div>
 
           <!-- Priority -->
@@ -46,30 +52,38 @@
             <select
               id="priority"
               v-model="form.priority"
-              class="mt-1 px-3 py-2 border border-blue-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="mt-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              :class="errors.priority ? 'border-red-500' : 'border-blue-600'"
             >
               <option value="">Select priority</option>
               <option value="Low">Low</option>
               <option value="Medium">Medium</option>
               <option value="High">High</option>
             </select>
+            <p v-if="errors.priority" class="text-red-500 text-xs mt-1">
+              {{ errors.priority }}
+            </p>
           </div>
 
           <!-- Status -->
           <div class="flex flex-col">
             <label for="status" class="text-sm font-medium text-gray-700"
-              >Status</label
+              >Status <span class="text-red-500">*</span></label
             >
             <select
               id="status"
               v-model="form.status"
-              class="mt-1 px-3 py-2 border border-blue-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="mt-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              :class="errors.status ? 'border-red-500' : 'border-blue-600'"
             >
               <option value="">Select status</option>
-              <option value="Open">Open</option>
-              <option value="In Progress">In Progress</option>
-              <option value="Closed">Closed</option>
+              <option value="open">Open</option>
+              <option value="in_progress">In Progress</option>
+              <option value="closed">Closed</option>
             </select>
+            <p v-if="errors.status" class="text-red-500 text-xs mt-1">
+              {{ errors.status }}
+            </p>
           </div>
 
           <!-- Submit -->
@@ -104,16 +118,13 @@
                 {{ ticket.title }}
               </h3>
               <span
+                v-if="ticket.status"
                 :class="[
-                  'text-xs px-2 py-1 rounded-full',
-                  ticket.status === 'Closed'
-                    ? 'bg-gray-100 text-gray-700'
-                    : ticket.status === 'In Progress'
-                    ? 'bg-amber-100 text-amber-700'
-                    : 'bg-green-100 text-green-700',
+                  'text-xs px-2 py-1 rounded-full capitalize',
+                  statusClass(ticket.status),
                 ]"
               >
-                {{ ticket.status }}
+                {{ formatStatus(ticket.status) }}
               </span>
             </div>
 
@@ -159,12 +170,9 @@
 
 <script setup>
 import { ref, computed } from "vue";
-import { useToastStore } from "../stores/useToastStore";
 import { useTicketStore } from "../stores/useTicketStore";
 
-const toastStore = useToastStore();
 const ticketStore = useTicketStore();
-
 const tickets = computed(() => ticketStore.getTickets());
 
 const editingId = ref(null);
@@ -175,37 +183,58 @@ const form = ref({
   status: "",
 });
 
-const handleSubmit = () => {
-  // TITLE validation
+const errors = ref({});
+
+// ✅ Format and style helpers
+const formatStatus = (status) => {
+  const map = {
+    open: "Open",
+    in_progress: "In Progress",
+    closed: "Closed",
+  };
+  return map[status] || status;
+};
+
+const statusClass = (status) => {
+  const classes = {
+    open: "bg-green-100 text-green-700",
+    in_progress: "bg-amber-100 text-amber-700",
+    closed: "bg-gray-100 text-gray-700",
+  };
+  return classes[status] || "bg-gray-100 text-gray-700";
+};
+
+// ✅ Validation logic
+const validateForm = () => {
+  errors.value = {};
+
   if (!form.value.title.trim()) {
-    toastStore.showToast("Title is required.", "error");
-    return;
+    errors.value.title = "Title is required.";
   }
 
-  // STATUS validation
   const allowedStatuses = ["open", "in_progress", "closed"];
   if (!form.value.status) {
-    toastStore.showToast("Status is required.", "error");
-    return;
+    errors.value.status = "Please select a status.";
   } else if (!allowedStatuses.includes(form.value.status)) {
-    toastStore.showToast(
-      "Status must be 'open', 'in_progress', or 'closed'.",
-      "error"
-    );
-    return;
+    errors.value.status = "Invalid status selected.";
   }
-  // EDIT ticket
+
+  return Object.keys(errors.value).length === 0;
+};
+
+// ✅ Submit
+const handleSubmit = () => {
+  if (!validateForm()) return;
+
   if (editingId.value) {
     ticketStore.updateTicket(editingId.value, form.value);
-    toastStore.showToast("Ticket updated successfully!", "success");
-    // CREATE ticket
   } else {
     ticketStore.createTicket(form.value);
-    toastStore.showToast("Ticket created successfully!", "success");
   }
 
   form.value = { title: "", description: "", priority: "", status: "" };
   editingId.value = null;
+  errors.value = {};
 };
 
 const handleEdit = (ticket) => {
@@ -221,6 +250,5 @@ const handleEdit = (ticket) => {
 const handleDelete = (id) => {
   if (!confirm("Are you sure you want to delete this ticket?")) return;
   ticketStore.deleteTicket(id);
-  toastStore.showToast("Ticket deleted.", "success");
 };
 </script>

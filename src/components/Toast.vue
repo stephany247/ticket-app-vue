@@ -14,7 +14,7 @@ const toastStore = useToastStore();
       :class="{
         'bg-green-600': toast.type === 'success',
         'bg-red-600': toast.type === 'error',
-        'bg-blue-600': toast.type === 'info'
+        'bg-blue-600': toast.type === 'info',
       }"
     >
       {{ toast.message }}
