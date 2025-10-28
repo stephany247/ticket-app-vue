@@ -1,9 +1,7 @@
 <template>
   <main class="min-h-screen flex flex-col">
     <div class="w-full bg-white">
-      <div class="max-w-360 mx-auto">
         <Hero />
-      </div>
     </div>
 
      <!-- FEATURES SECTION  -->

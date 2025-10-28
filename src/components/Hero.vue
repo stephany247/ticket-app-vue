@@ -10,7 +10,7 @@
       class="absolute right-6 top-8 w-32 h-32 rounded-full bg-linear-to-br from-indigo-100 to-transparent opacity-60 pointer-events-none"
     ></div>
 
-    <div class="max-w-[1440px] mx-auto px-6 md:px-8 lg:px-12">
+    <div class="max-w-360 mx-auto px-6 md:px-8 lg:px-12">
       <div class="pt-20 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
         <div class="z-10">
           <h1
