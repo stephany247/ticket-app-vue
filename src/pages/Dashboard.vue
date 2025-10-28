@@ -88,9 +88,9 @@ onMounted(() => {
 
   ticketStats.value = {
     total: tickets.length,
-    open: tickets.filter((t) => t.status === "Open").length,
-    resolved: tickets.filter((t) => t.status === "Closed").length,
-    in_progress: tickets.filter((t) => t.status === "In Progress").length,
+    open: tickets.filter((t) => t.status === "open").length,
+    resolved: tickets.filter((t) => t.status === "closed").length,
+    in_progress: tickets.filter((t) => t.status === "in_progress").length,
   };
 });
 

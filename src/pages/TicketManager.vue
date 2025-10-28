@@ -149,13 +149,13 @@
               <div class="flex gap-2">
                 <button
                   @click="handleEdit(ticket)"
-                  class="text-blue-600 hover:underline text-sm"
+                  class="text-blue-600 hover:underline text-sm cursor-pointer"
                 >
                   Edit
                 </button>
                 <button
                   @click="handleDelete(ticket.id)"
-                  class="text-red-600 hover:underline text-sm"
+                  class="text-red-600 hover:underline text-sm cursor-pointer"
                 >
                   Delete
                 </button>
@@ -185,7 +185,7 @@ const form = ref({
 
 const errors = ref({});
 
-// ✅ Format and style helpers
+// Format and style helpers
 const formatStatus = (status) => {
   const map = {
     open: "Open",
